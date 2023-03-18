@@ -1,6 +1,89 @@
 import { useEffect, useState, useMemo, useRef } from "react";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
 
 import trimText from "./helpers/trimText";
+
+const PageContainer = styled(Box)(({ theme }) => ({
+  "& header": {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "60px 100px",
+    height: "50px",
+    backgroundColor: "grey",
+
+    "& div": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "450px",
+
+      "&:last-child": {
+        gap: "8px",
+      },
+    },
+  },
+
+  "& section": {
+    padding: "30px 100px",
+    height: "360px",
+
+    "& > div:first-of-type": {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+  },
+}));
+
+const ReloadLink = styled(Typography)(() => ({
+  cursor: "pointer",
+  textDecoration: "underline",
+}));
+
+const CardContainer = styled(Card)(() => ({
+  border: "1px solid darkgrey",
+  padding: "16px 16px 24px",
+  width: "600px",
+  display: "grid",
+  gridTemplateColumns: "50% 50%",
+  gap: "16px",
+
+  "& img": {
+    width: "100%",
+  },
+
+  "& > div:first-of-type": {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+
+    "& div": {
+      height: "50px",
+    },
+  },
+
+  "& > div:last-child": {
+    padding: "0px 16px",
+
+    "& p": {
+      wordBreak: "break-all",
+    },
+  },
+}));
+
+const PaginationContainer = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "center",
+  padding: "20px",
+}));
 
 function App() {
   const [data, setData] = useState();
@@ -52,51 +135,76 @@ function App() {
     }
   };
 
+  const handlePagination = (e, value) => {
+    setSelectedDataID(value);
+  };
+
   return (
-    <>
+    <PageContainer>
       <header>
         <div>
-          <h5>
+          <Typography variant="h5">
             Load new feeds{" "}
-            <span onClick={() => handleGetData(false)}>here</span>
-          </h5>
+            <ReloadLink variant="inherit" onClick={() => handleGetData(false)}>
+              here
+            </ReloadLink>
+          </Typography>
         </div>
         <div>
           <h1>OR</h1>
         </div>
         <div>
-          <input ref={tagRef} placeholder="Search by tags here!" />
-          <button onClick={() => handleGetData(true)}>search</button>
+          <Input inputRef={tagRef} placeholder="Search by tags here!" />
+          <Button color="inherit" onClick={() => handleGetData(true)}>
+            search
+          </Button>
         </div>
       </header>
       <section>
         <div>
-          <button
+          <Button
+            color="inherit"
             onClick={() => setSelectedDataID((current) => current - 1)}
             disabled={selectedDataID === 1}
           >
             prev
-          </button>
-          <div>
+          </Button>
+          <CardContainer>
             <div>
               <div>
-                <h6>{trimText(selectedData?.title || "")}</h6>
+                <Typography variant="h6">
+                  {trimText(selectedData?.title || "")}
+                </Typography>
               </div>
               <img src={selectedData?.media?.m} alt="" height="200px" />
             </div>
             <div>
-              <p>{`Tags: ${selectedData?.tags || "-"}`}</p>
+              <Typography variant="subtitle1">{`Tags: ${
+                selectedData?.tags || "-"
+              }`}</Typography>
             </div>
-          </div>
-          <button
+          </CardContainer>
+          <Button
+            color="inherit"
             onClick={() => setSelectedDataID((current) => current + 1)}
             disabled={selectedDataID === 20}
           >
             next
-          </button>
+          </Button>
         </div>
+        <PaginationContainer>
+          <Stack spacing={2}>
+            <Pagination
+              count={data?.length}
+              page={selectedDataID}
+              onChange={handlePagination}
+              hidePrevButton
+              hideNextButton
+            />
+          </Stack>
+        </PaginationContainer>
       </section>
-    </>
+    </PageContainer>
   );
 }
 
