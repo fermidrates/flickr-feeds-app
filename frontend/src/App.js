@@ -131,6 +131,7 @@ function App() {
     if (byTag) {
       getDataByTag(tagRef.current.value);
     } else {
+      tagRef.current.value = "";
       getData();
     }
   };

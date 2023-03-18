@@ -1,4 +1,4 @@
-const trimText = require("./trimText");
+import trimText from "./trimText";
 
 test("trim text longer than 20 characters", () => {
   expect(
