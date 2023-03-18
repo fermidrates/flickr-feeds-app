@@ -105,7 +105,7 @@ function App() {
     setSelectedDataID(1);
   };
 
-  const getDataByTags = async (tag) => {
+  const getDataByTag = async (tag) => {
     const res = await fetch(`http://localhost:8080/feeds/${tag}`);
     const formatRes = await res.json();
 
@@ -129,7 +129,7 @@ function App() {
 
   const handleGetData = (byTag) => {
     if (byTag) {
-      getDataByTags(tagRef.current.value);
+      getDataByTag(tagRef.current.value);
     } else {
       getData();
     }
