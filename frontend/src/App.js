@@ -7,6 +7,10 @@ import Typography from "@mui/material/Typography";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
 
 import trimText from "./helpers/trimText";
 
@@ -39,6 +43,18 @@ const PageContainer = styled(Box)(({ theme }) => ({
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
+    },
+  },
+}));
+
+const ImageContainer = styled(Dialog)(() => ({
+  "& h2": {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+
+    "& button": {
+      padding: "0px",
     },
   },
 }));
@@ -88,6 +104,7 @@ const PaginationContainer = styled(Box)(() => ({
 function App() {
   const [data, setData] = useState();
   const [selectedDataID, setSelectedDataID] = useState(1);
+  const [isImageClicked, setIsImageClicked] = useState(false);
 
   const tagRef = useRef();
 
@@ -142,6 +159,22 @@ function App() {
 
   return (
     <PageContainer>
+      {isImageClicked && (
+        <ImageContainer
+          onClose={() => setIsImageClicked(false)}
+          open={isImageClicked}
+        >
+          <DialogTitle>
+            <Typography>Image</Typography>
+            <IconButton onClick={() => setIsImageClicked(false)}>
+              <Typography>X</Typography>
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <img src={selectedData?.media?.m} alt="" />
+          </DialogContent>
+        </ImageContainer>
+      )}
       <header>
         <div>
           <Typography variant="h5">
@@ -177,7 +210,12 @@ function App() {
                   {trimText(selectedData?.title || "")}
                 </Typography>
               </div>
-              <img src={selectedData?.media?.m} alt="" height="200px" />
+              <img
+                src={selectedData?.media?.m}
+                alt=""
+                height="200px"
+                onClick={() => setIsImageClicked(true)}
+              />
             </div>
             <div>
               <Typography variant="subtitle1">{`Tags: ${
